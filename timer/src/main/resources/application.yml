@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    druid:
+      bs-mes:
+        url: jdbc:oracle:thin:@//10.2.0.130/BSMES
+        username: mesprod
+        password: bsmes2019
+        driver-class-name: oracle.jdbc.OracleDriver
+        initial-size: 1
+        min-idle: 1
+        max-active: 2
+        max-wait: 60000
+      tc-mes:
+        url: jdbc:oracle:thin:@//10.2.64.155/tcmes
+        username: TCMES
+        password: tc2021MESLongi
+        driver-class-name: oracle.jdbc.OracleDriver
+        initial-size: 1
+        min-idle: 1
+        max-active: 2
+        max-wait: 60000

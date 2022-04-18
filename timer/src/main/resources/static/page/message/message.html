@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MES消息</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script src="/lib/vue/vue.min.js"></script>
+    <script src="/lib/vue/vue-resource.min.js"></script>
+    <script src="/js/common/common.js"></script>
+    <script src="/lib/mui/mui.min.js"></script>
+    <link rel="stylesheet" href="/lib/mui/mui.min.css">
+</head>
+<body>
+<div id="app">
+    <header class="mui-bar mui-bar-nav">
+        <h1 class="mui-title">{{factory}}</h1>
+    </header>
+    <div class="mui-content">
+        <div class="mui-card">
+            <div class="mui-card-header">{{subject}}</div>
+            <div class="mui-card-content">
+                <div class="mui-card-content-inner">
+                    {{content}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    const APP = new Vue({
+        el: '#app',
+        data: {
+            factory: 'MES',
+            subject: '',
+            content: ''
+        },
+        mounted() {
+            this.getMassage()
+        },
+        methods: {
+            getMassage() {
+                this.ajaxGet('/message/info' + window.location.search, {
+                    key: this.key
+                }, result => {
+                    const data = result.data
+                    this.factory = data.factory + 'MES'
+                    this.subject = data.subject
+                    this.content = data.content
+                    document.title = this.factory + '消息'
+                })
+            }
+        }
+    })
+</script>
+</html>
