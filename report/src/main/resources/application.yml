@@ -1,12 +1,14 @@
+server:
+  port: 8090
 spring:
   web:
     resources:
       static-locations: classPath:static,file:C:\spring\report\static
   datasource:
     druid:
-#      filters: stat,wall
-#      stat-view-servlet:
-#        enabled: true
+      #      filters: stat,wall
+      #      stat-view-servlet:
+      #        enabled: true
       config:
         url: jdbc:oracle:thin:@//10.2.0.130/BSMES
         username: mesprod
@@ -20,6 +22,15 @@ spring:
         url: jdbc:oracle:thin:@//10.2.0.160/BSMES
         username: mesprod
         password: bsmes2019
+        driver-class-name: oracle.jdbc.OracleDriver
+        initial-size: 0
+        min-idle: 2
+        max-active: 5
+        max-wait: 60000
+      bs-scada:
+        url: jdbc:oracle:thin:@//10.2.0.149/BSSCADA
+        username: MESSCADA
+        password: RD_dev#BSsca@401
         driver-class-name: oracle.jdbc.OracleDriver
         initial-size: 0
         min-idle: 2

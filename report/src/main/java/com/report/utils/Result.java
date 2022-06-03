@@ -1,7 +1,5 @@
 package com.report.utils;
 
-import com.alibaba.fastjson.JSONObject;
-
 /**
  * 与form交互对象
  */
@@ -63,9 +61,5 @@ public class Result {
 
     public Object getData() {
         return data;
-    }
-
-    public String toJSONString() {
-        return JSONObject.toJSONString(this);
     }
 }

@@ -1,7 +1,7 @@
 package com.report.kanban.service.impl;
 
 import com.report.dao.Dao;
-import com.report.dao.DaoConfiguration;
+import com.report.conf.DaoConfiguration;
 import com.report.kanban.service.MachineKanbanService;
 import com.report.utils.CommonUtils;
 import com.report.utils.Record;
@@ -59,12 +59,12 @@ public class MachineKanbanServiceImpl implements MachineKanbanService {
      * @param endTime   结束时间
      * @param shop      车间
      */
-    private Double getDuringCount(Dao dao, String sqlId, String startTime, String endTime, String shop) {
+    private double getDuringCount(Dao dao, String sqlId, String startTime, String endTime, String shop) {
         Map<String, Object> param = new HashMap<>();
         param.put("startTime", startTime);
         param.put("endTime", endTime);
         param.put("shop", shop);
-        return CommonUtils.round(dao.getDouble(MAPPING_ID + sqlId, param), 0);
+        return dao.getDouble(MAPPING_ID + sqlId, param, 0);
     }
 
     /**

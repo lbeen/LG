@@ -1,4 +1,4 @@
-package com.report.dao;
+package com.report.conf;
 
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -27,6 +27,15 @@ public class DataSourcesConfiguration {
     @Bean
     @ConfigurationProperties("spring.datasource.druid.bs-dg")
     public DataSource bsDgDataSource() {
+        return DruidDataSourceBuilder.create().build();
+    }
+
+    /**
+     * 保山scada库
+     */
+    @Bean
+    @ConfigurationProperties("spring.datasource.druid.bs-scada")
+    public DataSource bsScadaDataSource() {
         return DruidDataSourceBuilder.create().build();
     }
 

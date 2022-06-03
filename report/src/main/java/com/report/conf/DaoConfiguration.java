@@ -1,5 +1,6 @@
-package com.report.dao;
+package com.report.conf;
 
+import com.report.dao.Dao;
 import com.report.sys.Factory;
 import com.report.sys.SysConstants;
 import com.report.utils.SpringUtils;
@@ -79,6 +80,14 @@ public class DaoConfiguration {
     @Bean
     public Dao bsDgDao(DataSource bsDgDataSource) {
         return Dao(bsDgDataSource, "保山DG库");
+    }
+
+    /**
+     * 保山scada库Dao
+     */
+    @Bean
+    public Dao bsScadaDao(DataSource bsScadaDataSource) {
+        return Dao(bsScadaDataSource, "保山scada库");
     }
 
     /**

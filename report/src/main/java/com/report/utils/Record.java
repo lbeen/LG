@@ -54,4 +54,30 @@ public class Record extends HashMap<String, Object> {
         }
         throw new RuntimeException(value.getClass() + "can not cast to Long");
     }
+
+    /**
+     * 获取Integer
+     */
+    public Double getDouble(String key) {
+        Object value = get(key);
+        if (value == null) {
+            return null;
+        }
+        if (value instanceof Double) {
+            return (Double) get(key);
+        }
+        if (value instanceof BigDecimal) {
+            return ((BigDecimal) value).doubleValue();
+        }
+        if (value instanceof Integer) {
+            return ((Integer) value).doubleValue();
+        }
+        if (value instanceof Long) {
+            return ((Long) value).doubleValue();
+        }
+        if (value instanceof Float) {
+            return ((Float) value).doubleValue();
+        }
+        throw new RuntimeException(value.getClass() + "can not cast to Long");
+    }
 }

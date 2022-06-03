@@ -1,7 +1,7 @@
 package com.report.kanban.web;
 
 import com.report.dao.Dao;
-import com.report.dao.DaoConfiguration;
+import com.report.conf.DaoConfiguration;
 import com.report.kanban.service.MachineKanbanService;
 import com.report.sys.Factory;
 import com.report.sys.SysConstants;

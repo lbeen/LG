@@ -1,5 +1,6 @@
 package com.report.dao;
 
+import com.report.utils.CommonUtils;
 import com.report.utils.Record;
 import org.apache.ibatis.session.SqlSession;
 
@@ -12,7 +13,7 @@ import java.util.Map;
 public class Dao {
     private final SqlSession sqlSession;
 
-    Dao(SqlSession sqlSession) {this.sqlSession = sqlSession;}
+    public Dao(SqlSession sqlSession) {this.sqlSession = sqlSession;}
 
     /**
      * sql查询数据list
@@ -34,13 +35,14 @@ public class Dao {
     }
 
     /**
-     * sql查询返回double
+     * sql查询返回Object
      *
      * @param sqlId sqlId
      * @param param 参数
+     * @param round 保留几位小数
      */
-    public Double getDouble(String sqlId, Map<String, Object> param) {
-        return sqlSession.selectOne(sqlId, param);
+    public Double getDouble(String sqlId, Map<String, Object> param, int round) {
+        return CommonUtils.round(sqlSession.selectOne(sqlId, param), round);
     }
 
     /**
