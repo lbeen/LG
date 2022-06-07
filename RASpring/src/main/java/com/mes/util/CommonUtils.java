@@ -66,7 +66,7 @@ public class CommonUtils {
      * @param number 数字
      * @param round  保留几位小数
      */
-    public static double round(double number, int round) {
+    public static double round(float number, int round) {
         return new BigDecimal(number).setScale(round, RoundingMode.HALF_UP).doubleValue();
     }
 

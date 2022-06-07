@@ -7,8 +7,12 @@ import com.datasweep.compatibility.client.DatasweepException;
 import com.datasweep.compatibility.client.Response;
 import com.datasweep.compatibility.ui.Time;
 import com.rockwell.mes.commons.base.ifc.services.IFunctionsEx;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 @Component
@@ -57,10 +61,10 @@ public class Dao {
      *
      * @param sql sql
      */
-    public Vector<String[]> queryBySql(String sql) {
+    public List<String[]> queryList(String sql) {
         @SuppressWarnings("unchecked")
         Vector<String[]> list = function.getArrayDataFromActive(sql);
-        return list == null ? new Vector<>() : list;
+        return CollectionUtils.isEmpty(list) ? Collections.emptyList() : new ArrayList<>(list);
     }
 
     public Response insert(String ATDefinition, SetConsumer consumer) throws DatasweepException {
