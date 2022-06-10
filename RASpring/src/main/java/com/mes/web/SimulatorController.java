@@ -11,10 +11,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +28,6 @@ public class SimulatorController {
     public Result list() throws Exception {
         String sql = "SELECT CRYSTAL_NUMBER_S,SPARE_2_S FROM AT_PM_LINEATIONANDDETECTION";
         sql += " WHERE CREATION_TIME>SYSDATE-10 AND CREATION_TIME<SYSDATE-8 AND SPARE_2_S>3";
-        //        String sql = "SELECT CRYSTAL_NUMBER_S,SPARE_2_S FROM AT_PM_LINEATIONANDDETECTION";
-        //        sql += " WHERE CRYSTAL_NUMBER_S='ZTS25H2901C'";
         List<String[]> rows = dao.queryList(sql);
 
         Workbook workbook = new XSSFWorkbook();
@@ -59,56 +55,71 @@ public class SimulatorController {
 
             writeData(sheet.createRow(rowIndex++), rounds.get(0)[0], "实测", headA, headB);
 
-            float totalLenTAWA = 0;
             float totalLenTBWA = 0;
+            float totalLenTAWA = 0;
+            float totalLenTAWB = 0;
             Map<String, Float> crystalLens = new LinkedHashMap<>();
-            for (int i = 0; i < rounds.size() - 1; i++) {
+            for (int i = 0; i < rounds.size(); i++) {
                 String[] round = rounds.get(i);
                 float len = Float.parseFloat(round[1]);
-                if (i != 0) {
+                if (i == 0) {
+                    totalLenTAWA += len;
+                    totalLenTAWB += len;
+                } else if (i == rounds.size() - 1) {
+                    totalLenTAWB += len;
+                } else {
                     totalLenTBWA += len;
+                    totalLenTAWA += len;
+                    totalLenTAWB += len;
                     crystalLens.put(round[0], len);
                 }
-                totalLenTAWA += len;
             }
 
-            float[] attenuationTAWA = new float[6];
-            for (int i = 0; i < 6; i++) {
-                attenuationTAWA[i] = (headA[i] - tailA[i]) / totalLenTAWA;
-            }
             float[] attenuationTBWA = new float[6];
+            float[] attenuationTAWA = new float[6];
+            float[] attenuationTAWB = new float[6];
             for (int i = 0; i < 6; i++) {
                 attenuationTBWA[i] = (headB[i] - tailA[i]) / totalLenTBWA;
+                attenuationTAWA[i] = (headA[i] - tailA[i]) / totalLenTAWA;
+                attenuationTAWB[i] = (headA[i] - tailB[i]) / totalLenTAWB;
             }
 
-            float lenTAWA = Float.parseFloat(rounds.get(0)[1]);
             float lenTBWA = 0;
+            float lenTAWA = Float.parseFloat(rounds.get(0)[1]);
+            float lenTAWB = Float.parseFloat(rounds.get(0)[1]);
 
+            float[] lastBTBWA = headB;
             float[] lastBTAWA = new float[6];
+            float[] lastBTAWB = new float[6];
             for (int i = 0; i < 6; i++) {
                 lastBTAWA[i] = headA[i] - attenuationTAWA[i] * lenTAWA;
+                lastBTAWB[i] = headA[i] - attenuationTAWA[i] * lenTAWB;
             }
-            float[] lastBTBWA = headB;
 
             for (Map.Entry<String, Float> entry : crystalLens.entrySet()) {
                 float len = entry.getValue();
 
-                lenTAWA += len;
                 lenTBWA += len;
+                lenTAWA += len;
+                lenTAWB += len;
 
-                float[] currentBTAWA = new float[6];
                 float[] currentBTBWA = new float[6];
+                float[] currentBTAWA = new float[6];
+                float[] currentBTAWB = new float[6];
                 for (int i = 0; i < 6; i++) {
-                    currentBTAWA[i] = headA[i] - attenuationTAWA[i] * lenTAWA;
                     currentBTBWA[i] = headB[i] - attenuationTBWA[i] * lenTBWA;
+                    currentBTAWA[i] = headA[i] - attenuationTAWA[i] * lenTAWA;
+                    currentBTAWB[i] = headA[i] - attenuationTAWB[i] * lenTAWB;
                 }
 
                 String crystalNumber = entry.getKey();
-                writeData(sheet.createRow(rowIndex++), crystalNumber, "模拟头A尾A", lastBTAWA, currentBTAWA);
                 writeData(sheet.createRow(rowIndex++), crystalNumber, "模拟头B尾A", lastBTBWA, currentBTBWA);
+                writeData(sheet.createRow(rowIndex++), crystalNumber, "模拟头A尾A", lastBTAWA, currentBTAWA);
+                writeData(sheet.createRow(rowIndex++), crystalNumber, "模拟头A尾B", lastBTAWB, currentBTAWB);
 
-                lastBTAWA = currentBTAWA;
                 lastBTBWA = currentBTBWA;
+                lastBTAWA = currentBTAWA;
+                lastBTAWB = currentBTAWB;
             }
 
             writeData(sheet.createRow(rowIndex++), rounds.get(rounds.size() - 1)[0], "实测", tailA, tailB);
