@@ -1,9 +1,5 @@
 package com.report.kanban.service;
 
-import com.report.kanban.entity.KanbanResource;
-import com.report.utils.common.Record;
-
-import java.util.List;
 import java.util.Map;
 
 /**
