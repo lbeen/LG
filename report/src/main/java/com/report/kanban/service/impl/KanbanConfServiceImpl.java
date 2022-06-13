@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.report.dao.Dao;
-import com.report.dao.Record;
+import com.report.kanban.service.KanbanPageService;
+import com.report.kanban.service.KanbanResourceService;
+import com.report.utils.common.Record;
 import com.report.kanban.service.KanbanConfService;
 import com.report.sys.Factory;
 import com.report.sys.service.SysService;
@@ -13,6 +15,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,20 +32,15 @@ public class KanbanConfServiceImpl implements KanbanConfService {
      */
     private static Map<String, String> KANBAN_VERSION;
 
-    private final Dao configDao;
+    private final KanbanResourceService kanbanResourceService;
+    private final KanbanPageService kanbanPageService;
     private final SysService sysService;
-
-    public KanbanConfServiceImpl(Dao configDao, SysService sysService) {
-        this.configDao = configDao;
-        this.sysService = sysService;
-
-        loadKanbanVersion();
-    }
 
     /**
      * 加载看板版本
      */
     @Override
+    @PostConstruct
     public void loadKanbanVersion() {
         KANBAN_VERSION = configDao.getList(MAPPING_ID + "getPages").stream().collect(
                 Collectors.toMap(r -> r.getString("id"), r -> r.getString("page_version")));

@@ -1,4 +1,4 @@
-package com.report.dao;
+package com.report.utils.common;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

@@ -1,87 +1,92 @@
 server:
   port: 8090
 spring:
-  web:
-    resources:
-      static-locations: classPath:static,file:C:\spring\report\static
   datasource:
     druid:
-      #      filters: stat,wall
-      #      stat-view-servlet:
-      #        enabled: true
-      config:
-        url: jdbc:oracle:thin:@//10.2.0.130/BSMES
-        username: mesprod
-        password: bsmes2019
-        driver-class-name: oracle.jdbc.OracleDriver
-        initial-size: 0
-        min-idle: 0
-        max-active: 2
-        max-wait: 60000
-      bs-dg:
-        url: jdbc:oracle:thin:@//10.2.0.160/BSMES
-        username: mesprod
-        password: bsmes2019
-        driver-class-name: oracle.jdbc.OracleDriver
-        initial-size: 0
-        min-idle: 2
-        max-active: 5
-        max-wait: 60000
-      bs-scada:
-        url: jdbc:oracle:thin:@//10.2.0.149/BSSCADA
-        username: MESSCADA
-        password: RD_dev#BSsca@401
-        driver-class-name: oracle.jdbc.OracleDriver
-        initial-size: 0
-        min-idle: 2
-        max-active: 5
-        max-wait: 60000
-      bs-machine1:
-        url: jdbc:sqlserver://10.2.3.233;DatabaseName=BS5GW
-        username: sa
-        password: longi
-        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-        validation-query: SELECT 1
-        initial-size: 0
-        min-idle: 2
-        max-active: 5
-        max-wait: 60000
-      bs-machine2:
-        url: jdbc:sqlserver://10.2.11.50;DatabaseName=BS5GW
-        username: sa
-        password: longi
-        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-        validation-query: SELECT 1
-        initial-size: 0
-        min-idle: 2
-        max-active: 5
-        max-wait: 60000
-      bs-machine3:
-        url: jdbc:sqlserver://10.2.26.10;DatabaseName=BS5GW
-        username: sa
-        password: longi
-        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-        validation-query: SELECT 1
-        initial-size: 0
-        min-idle: 2
-        max-active: 5
-        max-wait: 60000
-      tc-dg:
-        url: jdbc:oracle:thin:@//10.2.64.167/tcmes_st
-        username: TCMES
-        password: tc2021MESLongi
-        driver-class-name: oracle.jdbc.OracleDriver
-        initial-size: 0
-        min-idle: 2
-        max-active: 5
-        max-wait: 60000
-      tc-machine1:
-        url: jdbc:sqlserver://10.2.66.10;DatabaseName=TC10GW
-        username: sa
-        password: longi
-        driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-        validation-query: SELECT 1
-        initial-size: 0
-        min-idle: 2
-        max-active: 5
-        max-wait: 60000
+      filters: stat,wall
+      stat-view-servlet:
+        enabled: true
+    dynamic:
+      primary: config
+      strict: true
+      datasource:
+        config:
+          url: jdbc:oracle:thin:@//10.2.0.130/BSMES
+          username: mesprod
+          password: bsmes2019
+          driver-class-name: oracle.jdbc.OracleDriver
+          druid:
+            initial-size: 0
+            min-idle: 0
+            max-active: 2
+            max-wait: 60000
+        bs-dg:
+          url: jdbc:oracle:thin:@//10.2.0.160/BSMES
+          username: mesprod
+          password: bsmes2019
+          driver-class-name: oracle.jdbc.OracleDriver
+          druid:
+            initial-size: 0
+            min-idle: 2
+            max-active: 5
+            max-wait: 60000
+        bs-scada:
+          url: jdbc:oracle:thin:@//10.2.0.149/BSSCADA
+          username: MESSCADA
+          password: RD_dev#BSsca@401
+          driver-class-name: oracle.jdbc.OracleDriver
+          druid:
+            initial-size: 0
+            min-idle: 2
+            max-active: 5
+            max-wait: 60000
+        bs-machine1:
+          url: jdbc:sqlserver://10.2.3.233;DatabaseName=BS5GW
+          username: sa
+          password: longi
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          druid:
+            initial-size: 0
+            min-idle: 2
+            max-active: 5
+            max-wait: 60000
+        bs-machine2:
+          url: jdbc:sqlserver://10.2.11.50;DatabaseName=BS5GW
+          username: sa
+          password: longi
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          druid:
+            initial-size: 0
+            min-idle: 2
+            max-active: 5
+            max-wait: 60000
+        bs-machine3:
+          url: jdbc:sqlserver://10.2.26.10;DatabaseName=BS5GW
+          username: sa
+          password: longi
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          druid:
+            initial-size: 0
+            min-idle: 2
+            max-active: 5
+            max-wait: 60000
+        tc-dg:
+          url: jdbc:oracle:thin:@//10.2.64.167/tcmes_st
+          username: TCMES
+          password: tc2021MESLongi
+          driver-class-name: oracle.jdbc.OracleDriver
+          druid:
+            initial-size: 0
+            min-idle: 2
+            max-active: 5
+            max-wait: 60000
+        tc-machine1:
+          url: jdbc:sqlserver://10.2.66.10;DatabaseName=TC10GW
+          username: sa
+          password: longi
+          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+          druid:
+            initial-size: 0
+            min-idle: 2
+            max-active: 5
+            max-wait: 60000
