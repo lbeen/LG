@@ -1,5 +1,6 @@
 package com.report.kanban.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -10,7 +11,7 @@ import java.util.Date;
 @TableName("T_MES_KANBAN_RESOURCE")
 @Data
 public class KanbanResource {
-    @TableId("ID")
+    @TableId(value = "ID",type = IdType.ASSIGN_UUID)
     private String id;
     @TableField("CREATION_TIME")
     private Date creationTime;

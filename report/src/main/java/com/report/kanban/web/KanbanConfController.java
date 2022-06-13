@@ -1,26 +1,32 @@
 package com.report.kanban.web;
 
 import com.report.kanban.KanbanConstants;
+import com.report.kanban.entity.KanbanPage;
+import com.report.kanban.entity.KanbanResource;
 import com.report.kanban.service.KanbanConfService;
+import com.report.kanban.service.KanbanPageService;
+import com.report.kanban.service.KanbanResourceService;
 import com.report.sys.SysConstants;
+import com.report.utils.common.QueryCondition;
 import com.report.utils.web.Result;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.FileFilter;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("kanban/conf")
 @RequiredArgsConstructor
 public class KanbanConfController {
+    private final KanbanResourceService kanbanResourceService;
+    private final KanbanPageService kanbanPageService;
     private final KanbanConfService kanbanConfService;
 
     /**
@@ -52,14 +58,12 @@ public class KanbanConfController {
      * 获取看板资源
      */
     @RequestMapping("getResources")
-    public Result getResources(String factory, String name, String type) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("factory", factory);
-        if (StringUtils.isNoneBlank(name)) {
-            param.put("name", "%" + name + "%");
-        }
-        param.put("type", type);
-        return Result.success(kanbanConfService.getResources(param));
+    public Result getResources(KanbanResource resource) {
+        QueryCondition<KanbanResource> condition = new QueryCondition<>();
+        condition.eqIfNotBlank("type", resource.getType());
+        condition.eqIfNotBlank("factory", resource.getFactory());
+        condition.likeIfNotBlank("name", resource.getName());
+        return Result.success(kanbanResourceService.list(condition));
 
     }
 
@@ -67,17 +71,8 @@ public class KanbanConfController {
      * 保存看板资源
      */
     @RequestMapping("saveResource")
-    public Result saveResource(String id, String type, String name, String location, int count, int duration,
-                               String factory) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("id", id);
-        param.put("type", type);
-        param.put("name", name);
-        param.put("location", location);
-        param.put("count", count);
-        param.put("duration", duration);
-        param.put("factory", factory);
-        kanbanConfService.saveResource(param);
+    public Result saveResource(KanbanResource resource) {
+        kanbanResourceService.saveOrUpdate(resource);
         return Result.success();
     }
 
@@ -85,30 +80,19 @@ public class KanbanConfController {
      * 获取看板页面
      */
     @RequestMapping("getPages")
-    public Result getPages(String factory, String name) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("factory", factory);
-        if (StringUtils.isNoneBlank(name)) {
-            param.put("name", "%" + name + "%");
-        }
-        return Result.success(kanbanConfService.getPages(param));
+    public Result getPages(KanbanPage page) {
+        QueryCondition<KanbanPage> condition = new QueryCondition<>();
+        condition.eqIfNotBlank("factory", page.getFactory());
+        condition.likeIfNotBlank("name", page.getName());
+        return Result.success(kanbanPageService.list(condition));
     }
 
     /**
      * 保存看板页面
      */
     @RequestMapping("savePage")
-    public Result savePage(String id, String name, String resources, int interval, String timing, String factory,
-                           String version) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("id", id);
-        param.put("name", name);
-        param.put("resources", resources);
-        param.put("interval", interval);
-        param.put("timing", timing);
-        param.put("factory", factory);
-        param.put("version", version);
-        kanbanConfService.savePage(param);
+    public Result savePage(KanbanPage page) {
+        kanbanPageService.saveOrUpdate(page);
         return Result.success();
     }
 
@@ -119,23 +103,7 @@ public class KanbanConfController {
     public Result getLocations(String type) {
         String path = SysConstants.OUT_STATIC + ("PPT".equals(
                 type) ? KanbanConstants.PPT_DIR : KanbanConstants.VIDEO_DIR);
-        File dir = new File(path);
-        if (!dir.exists() || !dir.isDirectory()) {
-            return Result.success(Collections.emptyList());
-        }
-
-        File[] files = dir.listFiles();
-        if (ArrayUtils.isEmpty(files)) {
-            return Result.success(Collections.emptyList());
-        }
-
-        List<String> locations = new ArrayList<>();
-        for (File file : files) {
-            if (file.exists() && file.isDirectory()) {
-                locations.add(file.getName());
-            }
-        }
-        return Result.success(locations);
+        return Result.success(listFilenames(path, true));
     }
 
     /**
@@ -144,20 +112,26 @@ public class KanbanConfController {
     @RequestMapping("getVideos")
     public Result getVideos(String location) {
         String path = SysConstants.OUT_STATIC + KanbanConstants.VIDEO_DIR + location;
-        File dir = new File(path);
+        return Result.success(listFilenames(path, false));
+    }
+
+    /**
+     * 列出路径文件名
+     *
+     * @param dirPath 目录路径
+     * @param isDir   是否是目录
+     */
+    public List<String> listFilenames(String dirPath, boolean isDir) {
+        File dir = new File(dirPath);
         if (!dir.exists() || !dir.isDirectory()) {
-            return Result.success(Collections.emptyList());
+            return Collections.emptyList();
         }
-
-        File[] files = dir.listFiles(f -> !f.isDirectory());
+        FileFilter filter = isDir ? File::isDirectory : f -> !f.isDirectory();
+        File[] files = dir.listFiles(filter);
         if (ArrayUtils.isEmpty(files)) {
-            return Result.success(Collections.emptyList());
+            return Collections.emptyList();
         }
 
-        List<String> videos = new ArrayList<>();
-        for (File file : files) {
-            videos.add(file.getName());
-        }
-        return Result.success(videos);
+        return Arrays.stream(files).map(File::getName).collect(Collectors.toList());
     }
 }
