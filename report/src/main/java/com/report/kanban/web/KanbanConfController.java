@@ -3,7 +3,8 @@ package com.report.kanban.web;
 import com.report.kanban.KanbanConstants;
 import com.report.kanban.service.KanbanConfService;
 import com.report.sys.SysConstants;
-import com.report.utils.Result;
+import com.report.utils.web.Result;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,10 +19,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("kanban/conf")
+@RequiredArgsConstructor
 public class KanbanConfController {
     private final KanbanConfService kanbanConfService;
-
-    public KanbanConfController(KanbanConfService kanbanConfService) {this.kanbanConfService = kanbanConfService;}
 
     /**
      * 加载看板版本

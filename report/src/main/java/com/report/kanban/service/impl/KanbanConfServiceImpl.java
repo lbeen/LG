@@ -2,18 +2,18 @@ package com.report.kanban.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.report.dao.Dao;
+import com.report.dao.Record;
 import com.report.kanban.service.KanbanConfService;
 import com.report.sys.Factory;
 import com.report.sys.service.SysService;
-import com.report.utils.CommonUtils;
-import com.report.utils.Record;
+import com.report.utils.common.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,7 +70,7 @@ public class KanbanConfServiceImpl implements KanbanConfService {
         }
         Record page = pages.get(0);
 
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = Maps.newHashMap();
         result.put("interval", page.get("interval"));
 
         JSONArray resources = JSONObject.parseArray(page.getString("resources"));
@@ -109,7 +109,7 @@ public class KanbanConfServiceImpl implements KanbanConfService {
             }
             Map<String, Object> resource = resources.get(0);
 
-            Map<String, Object> info = new HashMap<>();
+            Map<String, Object> info = Maps.newHashMap();
             info.put("name", resource.get("name"));
             info.put("type", resource.get("type"));
             switch (resource.get("type").toString()) {

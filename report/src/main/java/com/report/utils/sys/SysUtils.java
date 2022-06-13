@@ -1,12 +1,9 @@
-package com.report.utils;
+package com.report.utils.sys;
 
 /**
  * 系统工具
  */
 public class SysUtils {
-    private static final String[] BS_SINGLE_WORKSHOPS = new String[]{"一车间", "二车间", "三车间南", "三车间北"};
-    private static final String[] BS_MACHINE_WORKSHOPS = new String[]{"一车间", "二车间", "三车间"};
-
     /**
      * 获取拉晶车间
      *
@@ -20,13 +17,13 @@ public class SysUtils {
      * 获取保山单晶车间
      */
     public static String[] getBsSingleWorkshops() {
-        return BS_SINGLE_WORKSHOPS.clone();
+        return new String[]{"一车间", "二车间", "三车间南", "三车间北"};
     }
 
     /**
      * 获取保山机加车间
      */
     public static String[] getBsMachineWorkshops() {
-        return BS_MACHINE_WORKSHOPS.clone();
+        return new String[]{"一车间", "二车间", "三车间"};
     }
 }

@@ -1,8 +1,11 @@
-package com.report.utils;
+package com.report.utils.web;
+
+import lombok.Getter;
 
 /**
  * 与form交互对象
  */
+@Getter
 public class Result {
     /**
      * 代码（0：成功，其他失败）
@@ -33,33 +36,9 @@ public class Result {
         return new Result(0, msg, data);
     }
 
-    public static Result error() {
-        return error(-1, null);
-    }
-
-    public static Result error(String msg) {
-        return error(-1, msg);
-    }
-
-    public static Result error(int code, String msg) {
-        return new Result(code, msg, null);
-    }
-
     private Result(int code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
         this.data = data;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public Object getData() {
-        return data;
     }
 }

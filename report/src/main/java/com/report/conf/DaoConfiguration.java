@@ -3,7 +3,7 @@ package com.report.conf;
 import com.report.dao.Dao;
 import com.report.sys.Factory;
 import com.report.sys.SysConstants;
-import com.report.utils.SpringUtils;
+import com.report.utils.common.SpringUtils;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;

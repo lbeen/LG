@@ -1,7 +1,7 @@
 package com.report.kanban.service;
 
 import com.report.dao.Dao;
-import com.report.utils.Record;
+import com.report.dao.Record;
 
 import java.util.List;
 import java.util.Map;

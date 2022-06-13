@@ -1,7 +1,6 @@
 package com.report.dao;
 
-import com.report.utils.CommonUtils;
-import com.report.utils.Record;
+import com.report.utils.common.CommonUtils;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;

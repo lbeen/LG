@@ -1,21 +1,20 @@
 package com.report.kanban.web;
 
-import com.report.dao.Dao;
 import com.report.conf.DaoConfiguration;
+import com.report.dao.Dao;
 import com.report.kanban.service.MachineKanbanService;
 import com.report.sys.Factory;
 import com.report.sys.SysConstants;
-import com.report.utils.Result;
+import com.report.utils.web.Result;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("kanban/machine")
+@RequiredArgsConstructor
 public class MachineKanbanController {
     private final MachineKanbanService machineKanbanService;
-
-    public MachineKanbanController(
-            MachineKanbanService machineKanbanService) {this.machineKanbanService = machineKanbanService;}
 
     /**
      * 成品产量

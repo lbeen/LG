@@ -1,11 +1,8 @@
-package com.report.utils;
+package com.report.utils.common;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -13,8 +10,6 @@ import java.util.UUID;
  * 公共工具
  */
 public class CommonUtils {
-    private static final Map<String, DateTimeFormatter> DATETIME_FORMATTERS = new HashMap<>();
-
     /**
      * uuid
      */
@@ -61,20 +56,5 @@ public class CommonUtils {
     public static String[] getSortValueKey(Map<String, Integer> map) {
         return map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).map(
                 Map.Entry::getKey).toArray(String[]::new);
-    }
-
-    /**
-     * 格式化时间
-     *
-     * @param dateTime 时间
-     * @param pattern  格式
-     */
-    public static String formatDate(LocalDateTime dateTime, String pattern) {
-        DateTimeFormatter formatter = DATETIME_FORMATTERS.get(pattern);
-        if (formatter == null) {
-            formatter = DateTimeFormatter.ofPattern(pattern);
-            DATETIME_FORMATTERS.put(pattern, formatter);
-        }
-        return dateTime.format(formatter);
     }
 }

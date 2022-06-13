@@ -1,11 +1,12 @@
 package com.report.kanban.service.impl;
 
-import com.report.dao.Dao;
+import com.google.common.collect.Maps;
 import com.report.conf.DaoConfiguration;
+import com.report.dao.Dao;
+import com.report.dao.Record;
 import com.report.kanban.service.MachineKanbanService;
-import com.report.utils.CommonUtils;
-import com.report.utils.Record;
-import com.report.utils.SysUtils;
+import com.report.utils.common.CommonUtils;
+import com.report.utils.sys.SysUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +44,7 @@ public class MachineKanbanServiceImpl implements MachineKanbanService {
                 getDuringCount(dao, "blankBarReceive", shifts[1][1], shifts[1][2], shop),
                 getDuringCount(dao, "blankBarTest", shifts[1][1], shifts[1][2], shop)};
 
-        Map<String, Object> returnMap = new HashMap<>();
+        Map<String, Object> returnMap = Maps.newHashMap();
         returnMap.put("heads", new String[]{"班次", "毛棒接收", "毛棒检验",});
         returnMap.put("list", new Object[][]{last, current});
         return returnMap;
@@ -60,7 +60,7 @@ public class MachineKanbanServiceImpl implements MachineKanbanService {
      * @param shop      车间
      */
     private double getDuringCount(Dao dao, String sqlId, String startTime, String endTime, String shop) {
-        Map<String, Object> param = new HashMap<>();
+        Map<String, Object> param = Maps.newHashMap();
         param.put("startTime", startTime);
         param.put("endTime", endTime);
         param.put("shop", shop);
@@ -78,7 +78,7 @@ public class MachineKanbanServiceImpl implements MachineKanbanService {
     @Override
     public Map<String, Object> queryEchartsBarData(Dao dao, String sqlId, String shop, boolean sortByX) {
         String[][] shifts = getLastAndCurrentShift();
-        Map<String, Integer> total = new HashMap<>();
+        Map<String, Integer> total = Maps.newHashMap();
         Map<String, Integer> lastMap = queryEchartsBarData(dao, sqlId, shop, shifts[0][1], shifts[0][2], total);
         Map<String, Integer> currentMap = queryEchartsBarData(dao, sqlId, shop, shifts[1][1], shifts[1][2], total);
 
@@ -101,7 +101,7 @@ public class MachineKanbanServiceImpl implements MachineKanbanService {
             }
         }
 
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> data = Maps.newHashMap();
         data.put("legends",
                 new String[]{shifts[0][0] + "（" + lastTotal + "）", shifts[1][0] + "（" + currentTotal + "）"});
         data.put("xData", xValues);
@@ -126,7 +126,7 @@ public class MachineKanbanServiceImpl implements MachineKanbanService {
             return Collections.emptyMap();
         }
 
-        Map<String, Integer> data = new HashMap<>();
+        Map<String, Integer> data = Maps.newHashMap();
         for (Record record : result) {
             String xValue = record.getString("x");
             if (StringUtils.isBlank(xValue)) {
@@ -154,7 +154,7 @@ public class MachineKanbanServiceImpl implements MachineKanbanService {
      * @param endTime   结束时间
      */
     private List<Record> queryByShopAndTime(Dao dao, String sqlId, String shop, String startTime, String endTime) {
-        Map<String, Object> param = new HashMap<>();
+        Map<String, Object> param = Maps.newHashMap();
         param.put("startTime", startTime);
         param.put("endTime", endTime);
         param.put("shop", shop);
@@ -213,7 +213,7 @@ public class MachineKanbanServiceImpl implements MachineKanbanService {
         totals.addAll(headAndTotal.values());
         list.add(totals);
 
-        Map<String, Object> returnMap = new HashMap<>();
+        Map<String, Object> returnMap = Maps.newHashMap();
         returnMap.put("heads", heads);
         returnMap.put("list", list);
         return returnMap;
