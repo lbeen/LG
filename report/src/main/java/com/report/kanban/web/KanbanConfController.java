@@ -3,7 +3,6 @@ package com.report.kanban.web;
 import com.report.kanban.KanbanConstants;
 import com.report.kanban.entity.KanbanPage;
 import com.report.kanban.entity.KanbanResource;
-import com.report.kanban.service.KanbanConfService;
 import com.report.kanban.service.KanbanPageService;
 import com.report.kanban.service.KanbanResourceService;
 import com.report.sys.SysConstants;
@@ -27,14 +26,13 @@ import java.util.stream.Collectors;
 public class KanbanConfController {
     private final KanbanResourceService kanbanResourceService;
     private final KanbanPageService kanbanPageService;
-    private final KanbanConfService kanbanConfService;
 
     /**
      * 加载看板版本
      */
     @RequestMapping("loadKanbanVersion")
     public Result loadKanbanVersion() {
-        kanbanConfService.loadKanbanVersion();
+        kanbanPageService.loadKanbanVersion();
         return Result.success();
     }
 
@@ -43,7 +41,7 @@ public class KanbanConfController {
      */
     @RequestMapping("getKanbanVersion")
     public Result getKanbanVersion(String id) {
-        return Result.success(null, kanbanConfService.getKanbanVersion(id));
+        return Result.success(null, kanbanPageService.getKanbanVersion(id));
     }
 
     /**
@@ -51,7 +49,7 @@ public class KanbanConfController {
      */
     @RequestMapping("getPageResources")
     public Result getPageResources(String id) {
-        return Result.success(kanbanConfService.getPageResources(id));
+        return Result.success(kanbanPageService.getPageResources(id));
     }
 
     /**
@@ -60,10 +58,10 @@ public class KanbanConfController {
     @RequestMapping("getResources")
     public Result getResources(KanbanResource resource) {
         QueryCondition<KanbanResource> condition = new QueryCondition<>();
-        condition.eqIfNotBlank("type", resource.getType());
-        condition.eqIfNotBlank("factory", resource.getFactory());
-        condition.likeIfNotBlank("name", resource.getName());
-        return Result.success(kanbanResourceService.list(condition));
+        condition.eqIfNotBlank(KanbanResource::getType, resource.getType());
+        condition.eqIfNotBlank(KanbanResource::getFactory, resource.getFactory());
+        condition.likeIfNotBlank(KanbanResource::getName, resource.getName());
+        return Result.success("提示", kanbanResourceService.list(condition));
 
     }
 
@@ -82,8 +80,8 @@ public class KanbanConfController {
     @RequestMapping("getPages")
     public Result getPages(KanbanPage page) {
         QueryCondition<KanbanPage> condition = new QueryCondition<>();
-        condition.eqIfNotBlank("factory", page.getFactory());
-        condition.likeIfNotBlank("name", page.getName());
+        condition.eqIfNotBlank(KanbanPage::getFactory, page.getFactory());
+        condition.likeIfNotBlank(KanbanPage::getName, page.getName());
         return Result.success(kanbanPageService.list(condition));
     }
 
