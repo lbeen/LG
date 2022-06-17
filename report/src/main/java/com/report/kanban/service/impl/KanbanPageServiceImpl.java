@@ -97,7 +97,6 @@ public class KanbanPageServiceImpl extends ServiceImpl<KanbanPageMapper, KanbanP
             if (resource == null) {
                 resourceIds.set(i, Collections.emptyMap());
                 continue;
-
             }
             Map<String, Object> info = Maps.newHashMap();
             info.put("name", resource.getName());

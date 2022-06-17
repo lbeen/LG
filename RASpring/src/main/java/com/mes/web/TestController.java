@@ -31,13 +31,7 @@ public class TestController {
     @RequestMapping("list")
     public Result list() throws Exception {
         Vector<ATRow> list = dao.queryATRows("AT_test", f -> {});
-        return null;
-    }
-
-    private String getShortDateStr() {
-        //        CollectionUtils
-        IFunctionsEx FUNCTION = dao.getFunction();
-        return FUNCTION.formatTime(FUNCTION.getDBTime(), "yMD");
+        return Result.success(list);
     }
 
     @RequestMapping("insert")

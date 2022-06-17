@@ -25,7 +25,7 @@ public class SimulatorController {
     public SimulatorController(Dao dao) {this.dao = dao;}
 
     @RequestMapping("resistance")
-    public Result list() throws Exception {
+    public Result resistance() throws Exception {
         String sql = "SELECT CRYSTAL_NUMBER_S,SPARE_2_S FROM AT_PM_LINEATIONANDDETECTION";
         sql += " WHERE CREATION_TIME>SYSDATE-10 AND CREATION_TIME<SYSDATE-8 AND SPARE_2_S>3";
         List<String[]> rows = dao.queryList(sql);
@@ -135,25 +135,6 @@ public class SimulatorController {
         return null;
     }
 
-    private void writeData(Row row, String crystalNumber, String type, float[] resistanceA, float[] resistanceB) {
-        row.createCell(0).setCellValue(crystalNumber);
-        row.createCell(1).setCellValue(type);
-
-        int index = 2;
-        for (float value : resistanceA) {
-            row.createCell(index++).setCellValue(CommonUtils.round(value, 3));
-        }
-        for (float value : resistanceB) {
-            row.createCell(index++).setCellValue(CommonUtils.round(value, 3));
-        }
-    }
-
-    private List<String[]> getRounds(String blankNumber) {
-        String sql = "SELECT CRYSTAL_NUMBER_S,LENGTH_F FROM AT_PM_WORKBLANKLINEATION";
-        sql += " WHERE WORKBLANK_NUMBER_S='" + blankNumber + "' ORDER BY CRYSTAL_NUMBER_S";
-        return dao.queryList(sql);
-    }
-
     private float[][] getResistance(String crystalNumber) throws Exception {
         ATRow row = dao.queryATRow("QM_DetectionResistance", f -> {
             f.forColumnNameEqualTo("crystal_number", crystalNumber);
@@ -171,6 +152,142 @@ public class SimulatorController {
                 (float) row.getValue("resistance_value_B4"), (float) row.getValue("resistance_value_B5"),
                 (float) row.getValue("resistance_value_B6")};
         return new float[][]{resistanceA, resistanceB};
+    }
+
+    private void writeData(Row row, String crystalNumber, String type, float[] resistanceA, float[] resistanceB) {
+        row.createCell(0).setCellValue(crystalNumber);
+        row.createCell(1).setCellValue(type);
+
+        int index = 2;
+        for (float value : resistanceA) {
+            row.createCell(index++).setCellValue(CommonUtils.round(value, 3));
+        }
+        for (float value : resistanceB) {
+            row.createCell(index++).setCellValue(CommonUtils.round(value, 3));
+        }
+    }
+
+    @RequestMapping("lifetime")
+    public Result lifetime() throws Exception {
+        String sql = "SELECT CRYSTAL_NUMBER_S,SPARE_2_S FROM AT_PM_LINEATIONANDDETECTION";
+        sql += " WHERE CREATION_TIME>SYSDATE-10 AND CREATION_TIME<SYSDATE-8 AND SPARE_2_S>3";
+        List<String[]> rows = dao.queryList(sql);
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet();
+
+        int count = 0;
+        int rowIndex = 1;
+        for (String[] row : rows) {
+            String blankNumber = row[0];
+            int normal = Integer.parseInt(row[1]);
+            List<String[]> rounds = getRounds(blankNumber).subList(0, normal);
+            float[] lifetimeHead = getLifetime(rounds.get(0)[0]);
+            if (lifetimeHead == null) {
+                continue;
+            }
+            float[] lifetimeTail = getLifetime(rounds.get(rounds.size() - 1)[0]);
+            if (lifetimeTail == null) {
+                continue;
+            }
+
+            float headA = lifetimeHead[0];
+            float headB = lifetimeHead[1];
+            float tailA = lifetimeTail[0];
+            float tailB = lifetimeTail[1];
+
+            writeData(sheet.createRow(rowIndex++), rounds.get(0)[0], "实测", headA, headB);
+
+            float totalLenTBWA = 0;
+            float totalLenTAWA = 0;
+            float totalLenTAWB = 0;
+            Map<String, Float> crystalLens = new LinkedHashMap<>();
+            for (int i = 0; i < rounds.size(); i++) {
+                String[] round = rounds.get(i);
+                float len = Float.parseFloat(round[1]);
+                if (i == 0) {
+                    totalLenTAWA += len;
+                    totalLenTAWB += len;
+                } else if (i == rounds.size() - 1) {
+                    totalLenTAWB += len;
+                } else {
+                    totalLenTBWA += len;
+                    totalLenTAWA += len;
+                    totalLenTAWB += len;
+                    crystalLens.put(round[0], len);
+                }
+            }
+
+            float attenuationTBWA = (headB - tailA) / totalLenTBWA;
+            float attenuationTAWA = (headA - tailA) / totalLenTAWA;
+            float attenuationTAWB = (headA - tailB) / totalLenTAWB;
+
+            float lenTBWA = 0;
+            float lenTAWA = Float.parseFloat(rounds.get(0)[1]);
+            float lenTAWB = Float.parseFloat(rounds.get(0)[1]);
+
+            float lastBTBWA = headB;
+            float lastBTAWA = headA - attenuationTAWA * lenTAWA;
+            float lastBTAWB = headA - attenuationTAWA * lenTAWB;
+
+            for (Map.Entry<String, Float> entry : crystalLens.entrySet()) {
+                float len = entry.getValue();
+
+                lenTBWA += len;
+                lenTAWA += len;
+                lenTAWB += len;
+
+                float currentBTBWA = headB - attenuationTBWA * lenTBWA;
+                float currentBTAWA = headA - attenuationTAWA * lenTAWA;
+                float currentBTAWB = headA - attenuationTAWB * lenTAWB;
+
+                String crystalNumber = entry.getKey();
+                writeData(sheet.createRow(rowIndex++), crystalNumber, "模拟头B尾A", lastBTBWA, currentBTBWA);
+                writeData(sheet.createRow(rowIndex++), crystalNumber, "模拟头A尾A", lastBTAWA, currentBTAWA);
+                writeData(sheet.createRow(rowIndex++), crystalNumber, "模拟头A尾B", lastBTAWB, currentBTAWB);
+
+                lastBTBWA = currentBTBWA;
+                lastBTAWA = currentBTAWA;
+                lastBTAWB = currentBTAWB;
+            }
+
+            writeData(sheet.createRow(rowIndex++), rounds.get(rounds.size() - 1)[0], "实测", tailA, tailB);
+
+            rowIndex++;
+            if (++count >= 300) {
+                break;
+            }
+        }
+
+        workbook.write(Files.newOutputStream(Paths.get("F:1.xlsx")));
+
+        return null;
+    }
+
+
+
+    private float[] getLifetime(String crystalNumber) throws Exception {
+        ATRow row = dao.queryATRow("QM_DetectionLifetime", f -> {
+            f.forColumnNameEqualTo("crystal_number", crystalNumber);
+            f.forColumnNameEqualTo("detection_type", "首检");
+        });
+        if (row == null) {
+            return null;
+        }
+        return new float[]{(float) row.getValue("lifetime_A"), (float) row.getValue("lifetime_B")};
+    }
+
+    private void writeData(Row row, String crystalNumber, String type, float lifetimeA, float lifetimeB) {
+        row.createCell(0).setCellValue(crystalNumber);
+        row.createCell(1).setCellValue(type);
+        row.createCell(2).setCellValue(lifetimeA);
+        row.createCell(3).setCellValue(lifetimeB);
+    }
+
+    private List<String[]> getRounds(String blankNumber) {
+        String sql = "SELECT CRYSTAL_NUMBER_S,LENGTH_F FROM AT_PM_WORKBLANKLINEATION";
+        sql += " WHERE WORKBLANK_NUMBER_S='" + blankNumber + "' ORDER BY CRYSTAL_NUMBER_S";
+        return dao.queryList(sql);
     }
 
 }
