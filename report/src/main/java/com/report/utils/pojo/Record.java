@@ -1,4 +1,4 @@
-package com.report.utils.common;
+package com.report.utils.pojo;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

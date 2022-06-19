@@ -1,6 +1,7 @@
-package com.report.utils.common;
+package com.report.utils;
 
 import com.google.common.collect.Maps;
+import com.report.utils.pojo.Times;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +12,13 @@ public class TimeUtils {
      * 日期格式器缓存
      */
     private static final Map<String, DateTimeFormatter> DATETIME_FORMATTERS = Maps.newHashMap();
+
+    /**
+     * 格式化现在时间
+     */
+    public static String formatNowTime() {
+        return LocalDateTime.now().format(getFormatter("yyyy-MM-dd HH:mm:ss"));
+    }
 
     /**
      * 格式化时间
@@ -67,7 +75,7 @@ public class TimeUtils {
      *
      * @param pattern 格式
      */
-    private static DateTimeFormatter getFormatter(String pattern) {
+    public static DateTimeFormatter getFormatter(String pattern) {
         DateTimeFormatter formatter = DATETIME_FORMATTERS.get(pattern);
         if (formatter == null) {
             formatter = DateTimeFormatter.ofPattern(pattern);
@@ -95,5 +103,34 @@ public class TimeUtils {
             days[count - 1 - i] = now.minusDays(i);
         }
         return days;
+    }
+
+    /**
+     * 获取最近两个班次
+     */
+    public static Times getRecent2Shifts() {
+        Times times = new Times();
+
+        DateTimeFormatter formatter = getFormatter("yyyy-MM-dd");
+        LocalDateTime now = LocalDateTime.now();
+        if (now.getHour() < 8) {
+            LocalDateTime shift1 = now.minusDays(1).withHour(8).withMinute(0).withSecond(0).withNano(0);
+            LocalDateTime shift2 = shift1.plusHours(12);
+            times.addTime(shift1, shift1.format(formatter) + "白班", "上个白班");
+            times.addTime(shift2, shift2.format(formatter) + "夜班", "本次夜班");
+            return times;
+        }
+        if (now.getHour() < 20) {
+            LocalDateTime shift1 = now.minusDays(1).withHour(20).withMinute(0).withSecond(0).withNano(0);
+            LocalDateTime shift2 = shift1.plusHours(12);
+            times.addTime(shift1, shift1.format(formatter) + "夜班", "上个夜班");
+            times.addTime(shift2, shift2.format(formatter) + "白班", "本次白班");
+            return times;
+        }
+        LocalDateTime shift1 = now.withHour(8).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime shift2 = shift1.plusHours(12);
+        times.addTime(shift1, shift1.format(formatter) + "白班", "上个白班");
+        times.addTime(shift2, shift2.format(formatter) + "夜班", "本次夜班");
+        return times;
     }
 }

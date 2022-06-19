@@ -1,4 +1,4 @@
-package com.report.utils.common;
+package com.report.utils;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;

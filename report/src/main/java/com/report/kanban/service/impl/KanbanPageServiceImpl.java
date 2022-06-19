@@ -120,4 +120,12 @@ public class KanbanPageServiceImpl extends ServiceImpl<KanbanPageMapper, KanbanP
             resourceIds.set(i, info);
         }
     }
+    /**
+     * 保存看板页面并刷新版本
+     */
+    @Override
+    public void saveAndRefreshVersion(KanbanPage page){
+        super.saveOrUpdate(page);
+        KANBAN_VERSION.put(page.getId(), page.getVersion());
+    }
 }

@@ -1,4 +1,4 @@
-package com.report.utils.common;
+package com.report.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

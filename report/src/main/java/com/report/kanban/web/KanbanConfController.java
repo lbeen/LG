@@ -6,8 +6,8 @@ import com.report.kanban.entity.KanbanResource;
 import com.report.kanban.service.KanbanPageService;
 import com.report.kanban.service.KanbanResourceService;
 import com.report.sys.SysConstants;
-import com.report.utils.common.QueryCondition;
-import com.report.utils.web.Result;
+import com.report.utils.QueryCondition;
+import com.report.utils.pojo.Result;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +61,7 @@ public class KanbanConfController {
         condition.eqIfNotBlank(KanbanResource::getType, resource.getType());
         condition.eqIfNotBlank(KanbanResource::getFactory, resource.getFactory());
         condition.likeIfNotBlank(KanbanResource::getName, resource.getName());
-        return Result.success("提示", kanbanResourceService.list(condition));
+        return Result.success(kanbanResourceService.list(condition));
 
     }
 
@@ -90,7 +90,7 @@ public class KanbanConfController {
      */
     @RequestMapping("savePage")
     public Result savePage(KanbanPage page) {
-        kanbanPageService.saveOrUpdate(page);
+        kanbanPageService.saveAndRefreshVersion(page);
         return Result.success();
     }
 

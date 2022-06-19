@@ -1,6 +1,9 @@
 server:
   port: 8090
 spring:
+  web:
+    resources:
+      static-locations: classPath:static,file:C:\spring\report\static
   datasource:
     druid:
       filters: stat,wall
@@ -90,3 +93,6 @@ spring:
             min-idle: 2
             max-active: 5
             max-wait: 60000
+mybatis-plus:
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:mapping/**/*.xml

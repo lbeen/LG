@@ -20,4 +20,9 @@ public interface KanbanPageService extends IService<KanbanPage> {
      * 获取看板资源
      */
     Map<String, Object> getPageResources(String pageId);
+
+    /**
+     * 保存看板页面并刷新版本
+     */
+    void saveAndRefreshVersion(KanbanPage page);
 }

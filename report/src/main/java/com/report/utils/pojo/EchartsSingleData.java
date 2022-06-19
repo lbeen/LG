@@ -1,4 +1,4 @@
-package com.report.utils.web;
+package com.report.utils.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

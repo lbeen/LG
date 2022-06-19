@@ -1,7 +1,7 @@
 package com.report.sys.web;
 
 import com.report.sys.service.SysService;
-import com.report.utils.web.Result;
+import com.report.utils.pojo.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
