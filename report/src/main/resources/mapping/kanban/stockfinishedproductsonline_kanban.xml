@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.report.kanban.mapper.StockFinishedProductsOnlineKanbanMapper">
+    <select id="PolycrystallineData" parameterType="Map" resultType="Record">
+        SELECT sum(apc.QUANTITY_INVEN_F) INVEN,
+               '多晶'                      types
+        FROM AT_PM_CLEANACCOMPANYINGORDER apc
+        WHERE LENGTH(APC.CLEAN_BATCH_NO_S) > 20
+          AND apc.QUANTITY_INVEN_F > 0.0
+
+    </select>
+    <select id="PolycrystallineDetailedData" parameterType="Map" resultType="Record">
+        SELECT apc.CLEAN_BATCH_NO_S,
+               ''                                                 nul,
+               apc.QUANTITY_INVEN_F,
+               '多晶'                                               types,
+               TO_CHAR(apc.END_TIME_T, 'YYYY-MM-DD HH24:MI:SS')   END_TIME_T,
+               ROUND(SYSDATE - CAST((apc.END_TIME_T) AS DATE), 2) DAYS
+        FROM AT_PM_CLEANACCOMPANYINGORDER apc
+        WHERE LENGTH(APC.CLEAN_BATCH_NO_S) > 20
+          AND apc.QUANTITY_INVEN_F > 0.01
+    </select>
+    <select id="RedrawnMaterialData" parameterType="Map" resultType="Record">
+        SELECT sum(apc.QUANTITY_INVEN_F) INVEN,
+               asd.DICTIONARYDESC_S      NAME
+        FROM AT_PM_CLEANACCOMPANYINGORDER apc
+                 LEFT JOIN AT_PM_RAWMATERIALORDER apr
+                           ON apr.LOT_NUMBER_S = substr(apc.RECEVICE_BATCH_S, 0, LENGTH(apr.LOT_NUMBER_S))
+                 LEFT JOIN AT_PM_SORTINGRECORDS aps ON apr.ORDER_ITEM_NUMBER_S = aps.RAW_ORDER_NUMBER_S
+                 LEFT JOIN AT_SM_DATADICTIONARYRELATION asd ON aps.PART_NUMBER_S = asd.DICTIONARYCODE_S
+        WHERE LENGTH(APC.CLEAN_BATCH_NO_S) &lt; 20
+          AND apc.QUANTITY_INVEN_F > 0.01
+        GROUP BY asd.DICTIONARYDESC_S
+    </select>
+    <select id="RedrawnMaterialDetailedData" parameterType="Map" resultType="Record">
+        select t1.*,
+               min(TO_CHAR(api.CREATE_TIME_T, 'YYYY-MM-DD HH24:MI:SS')) CREATE_TIME_T,
+               ROUND(SYSDATE - CAST(min(api.CREATE_TIME_T) AS DATE), 2) DAYS
+        from (SELECT distinct apc.CLEAN_BATCH_NO_S,
+                              APR.SPEC_S,
+                              apc.QUANTITY_INVEN_F,
+                              atw.column_2_s
+              FROM AT_PM_CLEANACCOMPANYINGORDER apc
+                       LEFT JOIN AT_PM_RAWMATERIALORDER apr
+                                 ON apr.LOT_NUMBER_S = substr(apc.RECEVICE_BATCH_S, 0, LENGTH(apr.LOT_NUMBER_S))
+                       left join AT_TM_WAREHOUSINGBATCH atw on atw.code_s = substr(apc.CLEAN_BATCH_NO_S, 12, 2)
+              WHERE LENGTH(APC.CLEAN_BATCH_NO_S) &lt; 20
+                AND apc.QUANTITY_INVEN_F > 0.01) t1
+                 left join AT_PM_INVENTORYHISTORY api on t1.CLEAN_BATCH_NO_S = api.LOT_NUMBER_S
+        where api.TRAN_TYPE_I = 3
+        group by t1.CLEAN_BATCH_NO_S, t1.QUANTITY_INVEN_F, t1.SPEC_S, t1.column_2_s
+    </select>
+
+</mapper>

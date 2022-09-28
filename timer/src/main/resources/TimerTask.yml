@@ -1,0 +1,42 @@
+timer:
+  tasks:
+#    - name: 保山KK消息推送
+#      bean: messageSenderBS
+#      delay: 10000
+#    - name: 腾冲KK消息推送
+#      bean: messageSenderTC
+#      delay: 10000
+#    - name: 处理切方数据腾冲
+#      bean: handleButtDataTC
+#      delay: 30000
+#    - name: 处理抛光数据腾冲
+#      bean: handlePolishingDataTC
+#      delay: 30000
+#    - name: 处理切方数据保山一车间
+#      bean: handleButtDataBS1
+#      delay: 30000
+#    - name: 处理抛光数据保山一车间
+#      bean: handlePolishingDataBS1
+#      delay: 30000
+#    - name: 处理切方数据保山二车间
+#      bean: handleButtDataBS2
+#      delay: 30000
+#    - name: 处理抛光数据保山二车间
+#      bean: handlePolishingDataBS2
+#      delay: 30000
+#    - name: 处理切方数据保山三车间
+#      bean: handleButtDataBS3
+#      delay: 30000
+#    - name: 处理抛光数据保山三车间
+#      bean: handlePolishingDataBS3
+#      delay: 30000
+#    - name: 处理切断设备待料信息腾冲
+#      bean: handleEmStopCutDateTC
+#      delay: 30000
+#    - name: 处理切方设备待料信息腾冲
+#      bean: handleEmStopButtDateTC
+#      delay: 30000
+#    - name: 处理抛光设备待料信息腾冲
+#      bean: handleEmStopPolishingDateTC
+#      delay: 30000
+

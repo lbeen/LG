@@ -11,7 +11,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class EchartsPieData {
     @JsonProperty("legend")
-    private String[] legend;
+    public final String[] legend;
     @JsonProperty("series")
-    private List<Map<String, Object>> series;
+    public final List<Map<String, Object>> series;
 }

@@ -2,23 +2,17 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="PushMessage">
-    <select id="getMessageInfo" parameterType="Long" resultType="Record">
-        SELECT SUBJECT_S,CONTENT_S FROM AT_SM_PUSH_MESSAGE WHERE ATR_KEY=#{key}
-    </select>
-    <select id="getPushingMessages" resultType="Record">
+<mapper namespace="com.mes.timer.message.mapper.PushMessageMapper">
+    <select id="getPushingMessages" parameterType="int" resultType="PushMessage">
         SELECT
-            ATR_KEY,TO_CHAR(CREATION_TIME,'YYYY-MM-DD HH24:MI:SS') CREATION_TIME,SUBJECT_S,TYPE_I,LEVEL_I,STATUS_I
+            ATR_KEY,CREATION_TIME creationTime,SUBJECT_S subject,TYPE_I type,LEVEL_I messageLevel,STATUS_I status
         FROM
             (SELECT
                 ROW_NUMBER() OVER(ORDER BY CREATION_TIME) RN,ATR_KEY,CREATION_TIME,SUBJECT_S,TYPE_I,LEVEL_I,STATUS_I
             FROM AT_SM_PUSH_MESSAGE WHERE PUSH_I=0)
-        WHERE RN&lt;=20
+        WHERE RN&lt;=${limit}
     </select>
-    <select id="getReceivers" parameterType="Long" resultType="Record">
+    <select id="getReceivers" parameterType="Long" resultType="string">
         SELECT RECEIVER_S FROM AT_SM_PUSH_MESSAGE_RECEIVER WHERE MAIN_KEY_I=#{key}
     </select>
-    <update id="updateMessagePush" parameterType="map">
-        UPDATE AT_SM_PUSH_MESSAGE SET PUSH_I=#{push},PUSH_TIME_T=SYSDATE WHERE ATR_KEY=#{key}
-    </update>
 </mapper>

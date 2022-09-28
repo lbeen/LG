@@ -1,6 +1,10 @@
 package com.report.utils.pojo;
 
+import oracle.sql.TIMESTAMP;
+
 import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -78,6 +82,15 @@ public class Record extends HashMap<String, Object> {
         if (value instanceof Float) {
             return ((Float) value).doubleValue();
         }
-        throw new RuntimeException(value.getClass() + "can not cast to Long");
+        throw new RuntimeException(value.getClass() + "can not cast to Double");
+    }
+
+    public LocalDateTime getLocalDateTime(String key){
+        Object value = get(key);
+        try {
+            return ((TIMESTAMP) value).toLocalDateTime();
+        } catch (SQLException e) {
+            throw new RuntimeException(value.getClass() + "can not cast to LocalDateTime");
+        }
     }
 }

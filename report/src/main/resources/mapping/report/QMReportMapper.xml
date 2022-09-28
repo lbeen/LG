@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.report.report.mapper.QMReportMapper">
+    <select id="summaryRodDetailsCount" parameterType="Map" resultType="int">
+        SELECT COUNT(1) FROM AT_PM_LINEATIONANDDETECTION T
+        <include refid="summaryRodDetailsWhere"/>
+    </select>
+    <select id="summaryRodDetails" parameterType="Map" resultType="Record">
+        SELECT * FROM
+        (SELECT
+        ROW_NUMBER() OVER(ORDER BY T.CREATION_TIME DESC) RN,
+        ORDER_NUMBER_S,
+        CRYSTAL_NUMBER_S,
+        SPEC_S,
+        DISLOCATION_FREE_LENGTH_F,
+        WEIGHING_F,
+        LINEATION_SEGMENTS_I,
+        IS_FINISH_S,
+        SPARE_1_S
+        FROM AT_PM_LINEATIONANDDETECTION T
+        <include refid="summaryRodDetailsWhere"/>)
+        WHERE RN>#{start} AND RN&lt;=#{end}
+    </select>
+    <select id="summaryRodDetailsExport" parameterType="Map" resultType="Record">
+        SELECT
+        ROW_NUMBER() OVER(ORDER BY T.CREATION_TIME DESC) RN,
+        ORDER_NUMBER_S,
+        CRYSTAL_NUMBER_S,
+        SPEC_S,
+        DISLOCATION_FREE_LENGTH_F,
+        WEIGHING_F,
+        LINEATION_SEGMENTS_I,
+        IS_FINISH_S,
+        SPARE_1_S
+        FROM AT_PM_LINEATIONANDDETECTION T
+        <include refid="summaryRodDetailsWhere"/>
+    </select>
+    <sql id="summaryRodDetailsWhere">
+        WHERE CREATION_TIME>=TO_DATE(#{startTime},'YYYY-MM-DD HH24:MI:SS')
+            AND CREATION_TIME&lt;TO_DATE(#{endTime},'YYYY-MM-DD HH24:MI:SS')
+        <if test="workshop != null and workshop != ''">
+            AND SPARE_1_S=#{workshop}
+        </if>
+        <if test="orderNumber != null and orderNumber != ''">
+            AND ORDER_NUMBER_S=#{orderNumber}
+        </if>
+        <if test="crystalNumber != null and crystalNumber != ''">
+            AND CRYSTAL_NUMBER_S=#{crystalNumber}
+        </if>
+    </sql>
+</mapper>

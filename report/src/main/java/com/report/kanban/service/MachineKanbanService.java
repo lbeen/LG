@@ -1,44 +1,57 @@
 package com.report.kanban.service;
 
 import com.report.utils.pojo.EchartsData;
+import com.report.utils.pojo.ScrollData;
 
 import java.util.Map;
 
 public interface MachineKanbanService {
     /**
-     * 获取毛棒接收检测数据
+     * 毛棒在线统计
      *
-     * @param dataSource 数据源
-     * @param shop    车间
+     * @param DS       数据源
+     * @param workshop 车间
      */
-    Map<String, Object> blankBarCount(String dataSource, String shop);
+    EchartsData maoOnlineStatistics(String DS, String workshop);
 
     /**
-     * 切断产量
+     * 毛棒在线列表
      *
-     * @param dataSource 数据源
+     * @param DS       数据源
+     * @param workshop 车间
      */
-    EchartsData cutoffYield(String dataSource);
+    ScrollData maoOnlineList(String DS, String workshop, int hours);
 
     /**
-     * 切方产量
+     * 切断数据
      *
-     * @param dataSource 数据源
+     * @param DS       数据源
+     * @param workshop 车间
      */
-    EchartsData buttYield(String dataSource);
+    Map<String, Object> cutOffData(String DS, String workshop);
 
     /**
-     * 抛光产量
+     * 切方数据
      *
-     * @param dataSource 数据源
+     * @param DS       数据源
+     * @param workshop 车间
      */
-    EchartsData polishingYield(String dataSource);
+    Map<String, Object> buttData(String DS, String workshop);
 
     /**
-     * 成品产量
+     * 抛光数据
      *
-     * @param dataSource 数据源
-     * @param shop    车间
+     * @param DS       数据源
+     * @param workshop 车间
      */
-    EchartsData finishYield(String dataSource, String shop);
+    Map<String, Object> polishingData(String DS, String workshop);
+
+    /**
+     * 成品数据
+     *
+     * @param DS       数据源
+     * @param workshop 车间
+     */
+    Map<String, Object> finishData(String DS, String workshop);
+
 }

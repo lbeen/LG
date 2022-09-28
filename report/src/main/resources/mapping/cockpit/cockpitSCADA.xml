@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.report.cockpit.mapper.CockpitSCADAMapper">
+    <select id="breakLineOrderAndStep" parameterType="Map" resultType="Record">
+        SELECT CRYSTALID,DD,FD,QSD FROM
+            (SELECT
+                 CRYSTALID,
+                 SUM(CASE WHEN STEPNO=8 THEN 1 ELSE 0 END) DD,
+                 SUM(CASE WHEN STEPNO=7 OR (STEPNO=6 AND (ENDTIME-STARTTIME)*24>0.5) THEN 1 ELSE 0 END) FD,
+                 SUM(CASE WHEN STEPNO IN (4,5) OR (STEPNO=6 AND (ENDTIME-STARTTIME)*24&lt;=0.5) THEN 1 ELSE 0 END) QSD
+             FROM ${table}
+             WHERE ENDTIME>=TO_DATE(#{startTime}, 'YYYY-MM-DD HH24:MI:SS')
+               AND ENDTIME&lt;TO_DATE(#{endTime}, 'YYYY-MM-DD HH24:MI:SS')
+               AND ISSUCCESSFUL=0 AND ISVALID=1 GROUP BY CRYSTALID)
+        WHERE DD>0 OR FD>0 OR QSD>0
+    </select>
+</mapper>

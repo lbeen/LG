@@ -1,7 +1,7 @@
 package com.mes.timer.message.kk;
 
+import com.mes.timer.constants.Factory;
 import com.mes.timer.message.kk.ws.ISysNotifyTodoWebServiceServiceStub;
-import com.mes.timer.sys.Factory;
 import com.mes.timer.utils.LogUtils;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;

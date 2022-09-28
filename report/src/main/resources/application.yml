@@ -3,11 +3,21 @@ server:
 spring:
   web:
     resources:
-      static-locations: classPath:static,file:C:\spring\report\static
+      static-locations: file:C:\spring\report\static
   datasource:
     druid:
-      filters: stat,wall
+      # 监控配置
       stat-view-servlet:
+        login-username: admin                       # 登录账号
+        login-password: 123456                      # 登录密码
+        reset-enable: false                         # 重置监控页面数据
+        url-pattern: /druid/*                       # 登录页面后缀
+        enabled: true                               # 开启监控
+        allow:                                      # 添加IP白名单,不写就是所有都允许
+      # 监控配置中的 web监控
+      web-stat-filter:
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*"
         enabled: true
     dynamic:
       primary: config
@@ -24,7 +34,7 @@ spring:
             max-active: 2
             max-wait: 60000
         bs-dg:
-          url: jdbc:oracle:thin:@//10.2.0.160/BSMES
+          url: jdbc:oracle:thin:@//10.2.64.185/BSMES
           username: mesprod
           password: bsmes2019
           driver-class-name: oracle.jdbc.OracleDriver
@@ -40,41 +50,11 @@ spring:
           driver-class-name: oracle.jdbc.OracleDriver
           druid:
             initial-size: 0
-            min-idle: 2
-            max-active: 5
-            max-wait: 60000
-        bs-machine1:
-          url: jdbc:sqlserver://10.2.3.233;DatabaseName=BS5GW
-          username: sa
-          password: longi
-          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-          druid:
-            initial-size: 0
-            min-idle: 2
-            max-active: 5
-            max-wait: 60000
-        bs-machine2:
-          url: jdbc:sqlserver://10.2.11.50;DatabaseName=BS5GW
-          username: sa
-          password: longi
-          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-          druid:
-            initial-size: 0
-            min-idle: 2
-            max-active: 5
-            max-wait: 60000
-        bs-machine3:
-          url: jdbc:sqlserver://10.2.26.10;DatabaseName=BS5GW
-          username: sa
-          password: longi
-          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-          druid:
-            initial-size: 0
-            min-idle: 2
+            min-idle: 1
             max-active: 5
             max-wait: 60000
         tc-dg:
-          url: jdbc:oracle:thin:@//10.2.64.167/tcmes_st
+          url: jdbc:oracle:thin:@//10.2.0.165:1521/tcmes
           username: TCMES
           password: tc2021MESLongi
           driver-class-name: oracle.jdbc.OracleDriver
@@ -83,14 +63,14 @@ spring:
             min-idle: 2
             max-active: 5
             max-wait: 60000
-        tc-machine1:
-          url: jdbc:sqlserver://10.2.66.10;DatabaseName=TC10GW
-          username: sa
-          password: longi
-          driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+        tc-scada:
+          url: jdbc:oracle:thin:@//10.2.64.143/TCSCADA
+          username: TCSCADA
+          password: RD_dev#TCsca@401
+          driver-class-name: oracle.jdbc.OracleDriver
           druid:
             initial-size: 0
-            min-idle: 2
+            min-idle: 1
             max-active: 5
             max-wait: 60000
 mybatis-plus:

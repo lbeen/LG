@@ -20,10 +20,6 @@ public class Result {
      */
     private final Object data;
 
-    public static Result success() {
-        return success("操作成功");
-    }
-
     public static Result success(String msg) {
         return success(msg, null);
     }

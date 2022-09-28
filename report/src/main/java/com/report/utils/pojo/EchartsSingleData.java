@@ -8,7 +8,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class EchartsSingleData {
     @JsonProperty("xAxis")
-    private String[] xAxis;
+    public final String[] xAxis;
     @JsonProperty("yAxis")
-    private double[] yAxis;
+    public final double[] yAxis;
 }

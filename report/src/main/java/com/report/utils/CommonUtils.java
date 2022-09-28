@@ -1,21 +1,16 @@
 package com.report.utils;
 
+import com.google.common.collect.Table;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Collections;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * 公共工具
  */
 public class CommonUtils {
-    /**
-     * uuid
-     */
-    public static String uuid() {
-        return UUID.randomUUID().toString().replace("-", "");
-    }
 
     /**
      * 保留小数
@@ -31,10 +26,21 @@ public class CommonUtils {
     }
 
     /**
+     * 获取map值排序后的key
+     */
+    public static String[] getSortValueKey(Map<String, Double> map) {
+        return map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).map(
+                Map.Entry::getKey).toArray(String[]::new);
+    }
+
+    /**
      * value增加
      */
-    public static void increaseValue(Map<String, Integer> map, String key, int addValue) {
-        Integer value = map.get(key);
+    public static void increaseValue(Map<String, Double> map, String key, Double addValue) {
+        if (addValue == null) {
+            return;
+        }
+        Double value = map.get(key);
         if (value == null) {
             value = addValue;
         } else {
@@ -44,17 +50,19 @@ public class CommonUtils {
     }
 
     /**
-     * 获取map排序后的key
+     * value增加
      */
-    public static String[] getSortKey(Map<String, Integer> map) {
-        return map.entrySet().stream().sorted(Map.Entry.comparingByKey()).map(Map.Entry::getKey).toArray(String[]::new);
-    }
-
-    /**
-     * 获取map值排序后的key
-     */
-    public static String[] getSortValueKey(Map<String, Integer> map) {
-        return map.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue())).map(
-                Map.Entry::getKey).toArray(String[]::new);
+    public static void increaseValue(Table<String, String, Double> table, String rowKey, String columnKey,
+                                     Double addValue) {
+        if (addValue == null) {
+            return;
+        }
+        Double value = table.get(rowKey, columnKey);
+        if (value == null) {
+            value = addValue;
+        } else {
+            value += addValue;
+        }
+        table.put(rowKey, columnKey, value);
     }
 }

@@ -2,15 +2,13 @@ package com.report.utils.pojo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Setter;
 
-@Setter
 @AllArgsConstructor
 public class EchartsData {
     @JsonProperty("legend")
-    private String[] legend;
+    public final String[] legend;
     @JsonProperty("xAxis")
-    private String[] xAxis;
+    public final String[] xAxis;
     @JsonProperty("yAxis")
-    private double[][] yAxis;
+    public final double[][] yAxis;
 }
