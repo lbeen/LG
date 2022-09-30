@@ -1,18 +1,18 @@
 
 /**
- * ESB_MES_StockOutputOrderServiceServiceCallbackHandler.java
+ * BillReturnServiceServiceCallbackHandler.java
  *
  * This file was auto-generated from WSDL
  * by the Apache Axis2 version: 1.6.2  Built on : Apr 17, 2012 (05:33:49 IST)
  */
 
-    package com.wms.stockout;
+    package com.wms.billreturn;
 
     /**
-     *  ESB_MES_StockOutputOrderServiceServiceCallbackHandler Callback class, Users can extend this class and implement
+     *  BillReturnServiceServiceCallbackHandler Callback class, Users can extend this class and implement
      *  their own receiveResult and receiveError methods.
      */
-    public abstract class ESB_MES_StockOutputOrderServiceServiceCallbackHandler{
+    public abstract class BillReturnServiceServiceCallbackHandler{
 
 
 
@@ -24,14 +24,14 @@
     * @param clientData Object mechanism by which the user can pass in user data
     * that will be avilable at the time this callback is called.
     */
-    public ESB_MES_StockOutputOrderServiceServiceCallbackHandler(Object clientData){
+    public BillReturnServiceServiceCallbackHandler(Object clientData){
         this.clientData = clientData;
     }
 
     /**
     * Please use this constructor if you don't want to set any clientData
     */
-    public ESB_MES_StockOutputOrderServiceServiceCallbackHandler(){
+    public BillReturnServiceServiceCallbackHandler(){
         this.clientData = null;
     }
 
@@ -45,19 +45,19 @@
 
         
            /**
-            * auto generated Axis2 call back method for eSBStockOutputOrderInfo method
-            * override this method for handling normal response from eSBStockOutputOrderInfo operation
+            * auto generated Axis2 call back method for billStateReturn method
+            * override this method for handling normal response from billStateReturn operation
             */
-           public void receiveResulteSBStockOutputOrderInfo(
-                    ESB_MES_StockOutputOrderServiceServiceStub.ESBStockOutputOrderInfoResponseE result
+           public void receiveResultbillStateReturn(
+                    BillReturnServiceServiceStub.BillStateReturnResponseE result
                         ) {
            }
 
           /**
            * auto generated Axis2 Error handler
-           * override this method for handling error response from eSBStockOutputOrderInfo operation
+           * override this method for handling error response from billStateReturn operation
            */
-            public void receiveErroreSBStockOutputOrderInfo(Exception e) {
+            public void receiveErrorbillStateReturn(Exception e) {
             }
                 
 
